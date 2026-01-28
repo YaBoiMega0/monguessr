@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MonGuessr - Select Mode</title>
+  <link rel="icon" href="./assets/icon.png">
+  <link rel="stylesheet" href="./select.style.css">
+</head>
+
+<body>
+  <header id="mainlogo">
+      <div>
+          <a href="./">
+              <img src="./assets/title.png" href="index.html" alt="MonGuessr Logo">
+          </a>
+      </div>
+  </header>
+  <div class="master">
+  <div class="shell">
+    <div class="shell-header">
+      <div>
+        <div class="shell-title">Select mode</div>
+      </div>
+    </div>
+
+    <div class="mode-tabs" id="modeTabs">
+      <button class="mode-tab active" data-mode="standard">
+        <span class="mode-tab-label">Standard</span>
+        <!-- <span class="mode-tab-pill">5 rounds</span> -->
+      </button>
+      <button class="mode-tab" data-mode="endless">
+        <span class="mode-tab-label">Endless</span>
+        <span class="mode-tab-pill">Health = Score</span>
+      </button>
+      <button class="mode-tab" data-mode="custom">
+        <span class="mode-tab-label">Custom</span>
+        <span class="mode-tab-pill">Tags &amp; timers</span>
+      </button>
+      <button class="mode-tab" data-mode="360" disabled style="opacity:0.45; cursor:default;">
+        <span class="mode-tab-label">360°</span>
+        <span class="mode-tab-pill">COMING SOON</span>
+      </button>
+    </div>
+
+    <div>
+      <!-- basic difficulty selector -->
+      <section class="panel" id="standardPanel">
+        <header class="panel-header">
+          <div>
+            <div class="panel-title" id="panelPrimaryTitle">Standard mode</div>
+            <div class="panel-subtitle" id="panelPrimarySubtitle">
+              5 rounds | Get the highest score 
+            </div>
+          </div>
+        </header>
+
+        <div class="difficulty-row" id="difficultyRow">
+          <button class="difficulty-chip" data-tag="easy">
+            <span class="level-dot"></span>
+            <span class="label-main">Easy</span>
+          </button>
+
+          <button class="difficulty-chip" data-tag="medium">
+            <span class="level-dot"></span>
+            <span class="label-main">Medium</span>
+          </button>
+
+          <button class="difficulty-chip" data-tag="hard">
+            <span class="level-dot"></span>
+            <span class="label-main">Hard</span>
+          </button>
+
+          <button class="difficulty-chip" data-tag="impossible">
+            <span class="level-dot"></span>
+            <span class="label-main">Impossible</span>
+          </button>
+        </div>
+      </section>
+
+
+      <!-- custom mode selector -->
+      <section class="panel" id="customPanel">
+        <header class="panel-header">
+          <div>
+            <div class="panel-title">Custom Mode</div>
+            <div class="panel-subtitle">
+              Build your own gamemode | Select multiple difficulties and tags
+            </div>
+          </div>
+        </header>
+
+        <!-- multi-select difficulties -->
+        <div class="chip-row" id="customDifficultyRow">
+          <div class="panel-subtitle" style="flex-basis:100%; margin-bottom:4px;">
+            Difficulties (select multiple):
+          </div>
+          <button class="tag-chip difficulty-chip" data-tag-type="difficulty" data-tag="easy">
+            <span class="level-dot"></span>
+            Easy
+          </button>
+          <button class="tag-chip difficulty-chip" data-tag-type="difficulty" data-tag="medium">
+            <span class="level-dot"></span>
+            Medium
+          </button>
+          <button class="tag-chip difficulty-chip" data-tag-type="difficulty" data-tag="hard">
+            <span class="level-dot"></span>
+            Hard
+          </button>
+          <button class="tag-chip difficulty-chip" data-tag-type="difficulty" data-tag="impossible">
+            <span class="level-dot"></span>
+            Impossible
+          </button>
+        </div>
+
+        <!-- tags -->
+        <div class="chip-row", id="tags-list">
+          <div class="panel-subtitle" style="flex-basis:100%; margin-bottom:4px;">
+            Tags (select multiple):
+          </div>
+          <button class="tag-chip all" id="allToggle">
+            <span class="dot"></span>
+            ALL
+          </button>
+          <button class="tag-chip" data-tag-type="location" data-tag="indoor">
+            <span class="dot"></span>
+            Indoor
+          </button>
+          <button class="tag-chip" data-tag-type="location" data-tag="outdoor">
+            <span class="dot"></span>
+            Outdoor
+          </button>
+          <button class="tag-chip" data-tag-type="location" data-tag="carparks">
+            <span class="dot"></span>
+            Car Parks
+          </button>
+        </div>
+
+        <!-- Gamemode + timer -->
+        <div class="settings-row">
+          <div class="setting-pill">
+            <div>
+              <div class="setting-label">Gamemode</div>
+              <div>Standard / Endless</div>
+            </div>
+            <select id="customGamemode">
+              <option value="standard">Standard</option>
+              <option value="endless">Endless</option>
+            </select>
+          </div>
+
+          <div class="setting-pill" id="numRounds">
+            <div>
+              <div class="setting-label">Rounds</div>
+              <div>Number of Rounds</div>
+            </div>
+            <input type="number" id="customRounds" min="1" value="5" />
+          </div>
+
+          <div class="setting-pill" id="startHealth" hidden>
+            <div>
+              <div class="setting-label">Health</div>
+              <div>Starting Health</div>
+            </div>
+            <input type="number" id="customHealth" min="0" value="5000" />
+          </div>
+
+          <div class="setting-pill">
+            <div>
+              <div class="setting-label">Timer</div>
+              <div>Seconds per image</div>
+            </div>
+            <input type="number" id="customTimer" min="0" value="60" />
+          </div>
+        </div>
+
+        <div class="settings-note">
+          Images will match one difficulty and at least one tag.
+        </div>
+      </section>
+    </div>
+
+    <div class="bottom-row">
+      <div class="preview-text" id="previewText">
+        Mode: <strong>Standard</strong> | Difficulty: <strong>Easy</strong> | 5 rounds
+      </div>
+      <div class="controls">
+        <button id="startBtn" type="button">
+          Start game
+        </button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="./select.js"></script>
+</body>
+</html>

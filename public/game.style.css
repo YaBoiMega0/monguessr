@@ -1,0 +1,157 @@
+:root {
+    --bg: #050814;
+    --bg-elevated: #101522;
+    --accent-root: 0, 100, 172;
+    --accent: rgb(var(--accent-root));
+    --accent-soft: rgba(var(--accent-root) 0.15);
+    --accent-strong: rgba(var(--accent-root) 0.3);
+    --text: #f5f7ff;
+    --muted: #9aa0c2;
+    --highlight1: rgba(255, 255, 255, 0.02);
+    --highlight2: rgba(255, 255, 255, 0.06);
+    --test: rgb(232, 92, 211);
+    --col3:rgb(0, 100, 172);
+
+    --border-radius: 10px;
+    --transition-fast: 0.15s ease-out;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+}
+
+.leaflet-control-container {
+    transition: none !important;
+    transform: none !important;
+}
+
+.leaflet-marker-icon {
+    border: none;
+    cursor: crosshair !important;
+}
+
+.mainContainer {
+    background: radial-gradient(circle at top, #1a2640 0, #050814 55%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.gameContainer {
+    position: absolute;
+    display:flex;
+    align-content: center;
+}
+
+#currentPicture {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    min-height: auto;
+    min-width: auto;
+    z-index: 2;
+}
+
+#loadText {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    display: flex;
+    text-align: center;
+    width: 20vw;
+    font-size: x-small;
+}
+
+.gameHUD {
+    position: absolute;
+    justify-content: center;
+    display: flex;
+    top: 1vw;
+    z-index: 3
+}
+
+#timer {
+    position: absolute;
+    align-content: center;
+    justify-content: center;
+    top: 2vw;
+    z-index: 3;
+}
+
+.mapContainer {
+    position: absolute;
+    bottom: 3vw;
+    right: 3vw;
+    min-width: 300px;
+    min-height: 200px;
+    width: 20vw;
+    height: 20vh;
+    z-index: 2;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+#map {
+    position: relative;
+    flex: 1;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    outline: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#map:hover {
+    cursor: crosshair;
+}
+
+.mapContainer:hover {
+    width: 30vw;
+    height: 40vh;
+}
+
+.mapContainer:hover #map {
+    width: 100%;
+    height: 100%;
+}
+
+.advButton {
+    position: relative;
+    width: 100%;
+    z-index: 401;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    padding: 9px 18px;
+    font-size: 1em;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgb(79, 139, 255), rgb(127, 93, 255));
+    color: #ffffff;
+    box-shadow: 0 14px 35px rgba(var(--accent-root), 0.55);
+    flex-shrink: 0;
+    order: 2;
+    transition: all 0.3s ease;
+}
+
+.advButton:disabled{
+    background: linear-gradient(135deg, hsl(220, 30%, 65%), hsl(253, 30%, 48%));
+    color: #cccccc;
+    box-shadow: 0 0 0;
+}
+
+.advButton:disabled:hover{
+    cursor: not-allowed;
+} 

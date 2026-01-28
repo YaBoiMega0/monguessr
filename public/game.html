@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Description Here">
+    <title>MonGuessr</title>
+    <link rel="icon" href="./assets/icon.png">
+    <link rel="stylesheet" href="./game.style.css">
+    <!--Compiled from typescript with Bun-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./game.js"></script>
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="gameHUD">
+            <h2 id="currentRoundText">Round 1/5</h2>
+            <h2 id="scoreText">Points: 0</h2>
+            <h2 id="timer">5:00</h2>
+        </div>
+        <div class="gameContainer">
+            <div id="loadText" class="center">
+                <p>image is taking longer than expected to load... please check your connection or wait</p>
+            </div>
+            <img id="currentPicture">
+        </div>
+        <div class="mapContainer">
+            <button class="advButton" id="submitGuessButton" disabled><h3>Submit (SPACE)</h3></button>
+            <button class="advButton" id="nextRoundButton" style="display:none;"><h3>Next (SPACE)</h3></button>
+            <div id="map"></div>
+        </div>
+    </div>
+</body>
+</html>

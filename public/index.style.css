@@ -1,0 +1,162 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --col1:rgb(29, 29, 27); 
+    --col2:rgb(255, 255, 255);
+    --col3:rgb(0, 100, 172);
+    --glow: rgba(0, 100, 172, 0.281);
+    --brightness:100%;
+}
+
+* a{
+    color: var(--col2);
+    text-decoration: none;
+}
+
+body{
+    background-color: var(--col1);
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#mainlogo{
+    background-color: var(--col3);
+    width: 100vw;
+    height: 10vh;
+    max-height: 10%;
+    z-index: 10;
+    box-shadow: 0px 0px 30px 0px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#mainlogo img{
+    height: 8vh;
+}
+
+.main{
+    height: 90vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.main div{
+    width: 85vw;
+    height: 100%;
+    background-color: var(--glow);
+    box-shadow:inset 0px 0px 100px 100px var(--col1);
+}
+
+.home{
+    padding-top: 1vw;
+    padding-left: 1vw;
+    margin: 1vw;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    gap: 1vw;
+}
+h1{
+    font-family: "Leela", sans-serif;
+    font-size: 4vw;
+    font-weight: bold;
+    color: var(--col2);
+    text-shadow: 4px 4px 0px var(--glow);
+}
+h2{
+    font-family: "Leela", sans-serif;
+    font-size: 3vw;
+    font-weight: bold;
+    color: var(--col2);
+    text-shadow: 4px 4px 0px var(--glow);
+}
+h3{
+    font-family: "Leela", sans-serif;
+    font-size: 1.9vw;
+    font-weight: bold;
+    color: var(--col2);
+    text-shadow: 4px 4px 0px var(--glow);
+}
+h4{
+    font-family: "Leela", sans-serif;
+    font-size: 1.5vw;
+    font-weight: bold;
+    color: var(--col2);
+    text-shadow: 4px 4px 0px var(--glow);
+}
+p{
+    font-family: "Leela", sans-serif;
+    font-size: 1.8vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    color: var(--col2);
+    text-shadow: 4px 4px 0px var(--glow);
+}
+
+.home a{
+    height: 5vw;
+}
+
+.home h3{
+    line-height: 20%;
+}
+
+.home button{
+    border-color: var(--col2);
+    border-radius: 2vw;
+    height: 5vw;
+    min-width: 22vw;
+    margin: 2vw;
+    background-color: transparent;
+}
+.home button h2{
+    text-shadow: 2px 2px 0px black;
+}
+.home button:hover{
+    border-color: var(--col1);
+    background-color: var(--col2);
+    transition-duration: 100ms;
+    cursor: pointer;
+    box-shadow:0px 0px 50px 0px var(--col2);
+    z-index: 10;
+    transition-duration: 200ms;
+}
+.home button:hover h2{
+    color: var(--col1);
+    text-shadow: 2px 2px 0px var(--glow);
+}
+.home button:active{
+    background-color: var(--col2);
+    border-color: var(--col1);
+}
+.home button:active h2{
+    color: var(--col1);
+}
+
+#bugreport{
+    text-decoration: underline;
+}
+#bugreport:hover{
+    color:var(--col3);
+    cursor: pointer;
+}
+
+#disclaimer{
+    font-size: 0.8vw;
+    max-width: 50%;
+    padding: 1vw;
+    opacity: 0.8;
+}

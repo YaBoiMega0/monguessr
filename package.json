@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/leaflet": "^1.9.21"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "start": "bun run ./src/server.ts",
+    "dev": "bun run ./src/server.ts --watch",
+    "buildgame": "bun build --outfile=game[hash].js --outdir=./src/out --target browser --external leaflet ./src/game.ts"
+  },
+  "dependencies": {
+    "bun-mysql": "^0.0.1",
+    "leaflet": "^1.9.4"
+  }
+}

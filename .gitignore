@@ -1,0 +1,21 @@
+# Private directories
+examples
+images
+private
+
+# dependencies (bun install)
+node_modules
+
+# dotenv environment variable files
+.env
+
+# caches
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# misc
+test.ts
+src/out
