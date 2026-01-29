@@ -12,29 +12,32 @@ const guessIcon = L.icon({
 })
 
 let selectedDifficulty = "easy";
-
-const difficultyChips: NodeListOf<HTMLButtonElement> = document.querySelectorAll<HTMLButtonElement>(".difficulty-chip")!;
-const tagsList: HTMLElement = document.getElementById("tags-list")!;
-const tagChips: NodeListOf<HTMLButtonElement> = document.querySelectorAll<HTMLButtonElement>(".tag-chip")!;
-const sendBtn: HTMLButtonElement = document.getElementById("sendBtn")! as HTMLButtonElement;
-const imgInput: HTMLInputElement = document.getElementById("photoInput")! as HTMLInputElement;
-
 let guessPos: [number, number] | null = null;
 let mapInstance: L.Map | null = null;
 let currentGuessMarker: L.Marker | null = null;
 let currentErrorPopup: L.Popup | null = null;
+let pImg: Blob | null = null;
+let difficultyChips: NodeListOf<HTMLButtonElement>, tagsList: HTMLElement, tagChips: NodeListOf<HTMLButtonElement>,
+sendBtn: HTMLButtonElement, imgInput: HTMLInputElement, coordsText: HTMLElement
 
 const bottomBoundary = -37.916
 const topBoundary = -37.905
 const leftBoundary = 145.127
 const rightBoundary = 145.143
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     setupUI();
     bindEvents();
 });
 
 function setupUI() {
+    difficultyChips = document.querySelectorAll<HTMLButtonElement>(".difficulty-chip")!;
+    tagsList = document.getElementById("tags-list")!;
+    tagChips = document.querySelectorAll<HTMLButtonElement>(".tag-chip")!;
+    sendBtn = document.getElementById("sendBtn")! as HTMLButtonElement;
+    imgInput = document.getElementById("photoInput")! as HTMLInputElement;
+    coordsText = document.getElementById("coordsText")! as HTMLElement;
+    
     const mapElement = document.getElementById('map') as HTMLElement;
     const bounds = L.latLngBounds(L.latLng(bottomBoundary, leftBoundary), L.latLng(topBoundary, rightBoundary));
     
@@ -89,23 +92,64 @@ function getConfig() {
     };
 }
 
-async function preprocessImage(image) {
-    // Get image from global variable imgInput: HTMLInputElement
-    // Force image into JPEG encoding
-    // SCALE/CROP to 1920x1080 (do not distort or squash pixels)
-    //    example: 2560x1440 would need no cropping, since it is 16:9
-    //    2600x1440 would be cropped vertically by 40px to become 16:9 then scaled to 1920x1080
-    // return for most efficiently sending over the internet
+async function preprocessImage(imageFile: File): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        
+        // Target exactly 1920x1080 (16:9)
+        const targetW = 1920;
+        const targetH = 1080;
+        const aspect = targetW / targetH;
+        
+        let drawW: number, drawH: number;
+        if (Math.abs(img.width / img.height - aspect) < 0.01) {
+            drawH = img.height;
+            drawW = img.width;
+        } else if (img.width / img.height > aspect) {
+            // Too wide
+            drawH = img.height;
+            drawW = drawH * aspect;
+        } else {
+            // Too tall
+            drawW = img.width;
+            drawH = Math.floor(drawW / aspect);
+        }
+        
+        // Center crop & scale
+        canvas.width = targetW;
+        canvas.height = targetH;
+        const sx = (img.width - drawW) / 2;
+        const sy = (img.height - drawH) / 2;
+        ctx.drawImage(img, sx, sy, drawW, drawH, 0, 0, targetW, targetH);
+        
+        // Encode AVIF
+        canvas.toBlob(
+            (blob) => blob ? resolve(blob) : reject('Critical Error:\nAVIF Encoding Failed.'),
+            'image/avif',
+            0.9  // Quality
+        );
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(imageFile);
+  });
 }
 
 async function submitLocation(): Promise<boolean> {
+    if (!pImg) return false;
+    
     const conf = getConfig();
-    console.log("Starting game with:", conf);
+    const img = pImg;
 
-    const response = await fetch('./api/getsession', {
+    const fd = new FormData();
+    fd.append('settings', JSON.stringify(conf))
+    fd.append('image', img, 'preprocessed.avif');
+
+    const response = await fetch('./api/uploadpicture', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(conf), // ADD THE IMAGE TO THIS SOMEHOW
+        body: fd,
     });
 
     return response.ok
@@ -141,6 +185,7 @@ function bindEvents() {
         // Upon clicking valid map location: place a guessIcon marker
         if (validCoordinates(e.latlng.lat, e.latlng.lng)) {
             guessPos = latLongToCoords(e.latlng.lat, e.latlng.lng)
+            coordsText.textContent = `Selected: (${guessPos[0]}, ${guessPos[1]})`;
 
             if (currentGuessMarker) mapInstance!.removeLayer(currentGuessMarker);
             currentGuessMarker = L.marker([e.latlng.lat, e.latlng.lng], { icon: guessIcon }).addTo(mapInstance!);
@@ -162,13 +207,9 @@ function bindEvents() {
             }, 3000);}
     });
 
-    // const mapElement = document.getElementById('map') as HTMLElement;
-    // const handleHover = () => {
-    //     setTimeout(() => {
-    //         mapInstance!.invalidateSize();
-    //     }, 50);
-    // };
-
-    // mapElement.addEventListener('mouseenter', handleHover);
-    // mapElement.addEventListener('mouseleave', handleHover);
+    imgInput.onchange = async () => {
+        if (imgInput.files?.[0]) {
+            pImg = await preprocessImage(imgInput.files[0]);
+        }
+    };
 }

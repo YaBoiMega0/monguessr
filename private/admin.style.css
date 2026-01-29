@@ -224,14 +224,10 @@
 }
 
 .bottom-row {
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    margin: 16px;
 }
 
-#startBtn {
+#sendBtn {
     border-radius: 999px;
     border: none;
     padding: 9px 18px;
@@ -250,13 +246,53 @@
     transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s ease-out;
 }
 
-#startBtn:hover {
+#sendBtn:hover {
     transform: translateY(-1px);
     filter: brightness(1.03);
     box-shadow: 0 18px 40px rgba(var(--accent-root), 0.7);
 }
 
-#startBtn:active {
+#sendBtn:active {
     transform: translateY(0);
     box-shadow: 0 10px 26px rgba(var(--accent-root), 0.55);
+}
+
+.mapContainer {
+    margin: 10px;
+    min-width: 300px;
+    min-height: 200px;
+    width: calc(100% - 20px);
+    height: 40vh;
+    z-index: 2;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+#map {
+    position: relative;
+    flex: 1;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    outline: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#map:hover {
+    cursor: crosshair;
+}
+
+.leaflet-marker-icon {
+    border: none;
+    cursor: crosshair !important;
+}
+
+.leaflet-zoom-animated {
+    border: none;
+    cursor: crosshair !important;
+}
+
+#coordsText {
+    margin: 10px;
 }

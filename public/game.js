@@ -143,13 +143,13 @@ function validCoordinates(lat, long) {
   return leftBoundary < long && long < rightBoundary && bottomBoundary < lat && lat < topBoundary;
 }
 function latLongToCoords(lat, long) {
-  const x = Math.ceil((long - 145.127) * 125000000);
-  const y = Math.ceil((lat + 37.916) * 125000000);
+  const x = Math.ceil((long - leftBoundary) * 125000000);
+  const y = Math.ceil((lat - bottomBoundary) * 125000000);
   return [x, y];
 }
 function coordsToLatLong(x, y) {
-  const long = x / 125000000 + 145.127;
-  const lat = y / 125000000 - 37.916;
+  const long = x / 125000000 + leftBoundary;
+  const lat = y / 125000000 + bottomBoundary;
   return [lat, long];
 }
 async function submitGuess() {

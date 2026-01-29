@@ -27,6 +27,7 @@
           <div>
             <div class="panel-title">UPLOAD A PHOTO</div>
             <input type="file" id="photoInput" accept="image/*" capture="environment">
+            <img id="previewImg">
             <div class="panel-subtitle">
               Select a difficulty and any number of tags.
             </div>
@@ -73,7 +74,7 @@
         </div>
       </section>
     </div>
-  <div id="mapContainer">
+  <div id="location-select">
       <section class="panel" id="customPanel">
         <header class="panel-header">
           <div>
@@ -83,10 +84,12 @@
             </div>
           </div>
         </header>
-        <div id="map"></div>
-
-    
-
+        <div class="mapContainer">
+            <div id="map"></div>
+        </div>
+        <div class="panel-subtitle" id="coordsText">
+            Selected: null
+        </div>
       </section>
     </div>
     <div class="bottom-row">
