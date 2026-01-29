@@ -108,26 +108,19 @@ export async function getGameState(sessionid: number): Promise<GameState> {
 }
 
 async function newLocation(db: SQL, difficulties: Difficulty[], tags: Tag[] = ['all']): Promise<number> {
-    const difs = difficulties.map((d) => `"${d.slice(0,1).toUpperCase()}"`).join(',')  
+    const difs = difficulties.map((d) => `"${d.slice(0,1).toUpperCase()}"`).join(',');
      
     // Add tag filtering
-    // let filter: string = `WHERE difficulty IN (${difs})`;
-    // if (tags[0] !== 'all') {
-    //     const tagConditions = tags.map(tag => {
-    //         if (tag === 'indoor') return "is_indoor = 1";
-    //         if (tag === 'outdoor') return "is_outdoor = 1"; 
-    //         if (tag === 'carparks') return "is_carpark = 1";
-    //         return "1=0"; // invalid tag
-    //     });
-    //     filter += " AND (" + tagConditions.join(" OR ") + ")";
-    // }
-            if (LOG_LVL >= 4) console.log(`${get_time()} Attempting to fetch from database: SELECT id FROM locations WHERE difficulty in (${difs}) ORDER BY RAND() LIMIT 1;`)
-    const result = await db.unsafe(`
-        SELECT id 
-        FROM locations 
-        WHERE difficulty in (${difs}) 
-        ORDER BY RAND() 
-        LIMIT 1;`);
+    let filter: string = 'difficulty IN (' + difs + ')';
+    if (tags.length > 0 && tags[0] !== 'all') {
+        const tagConditions = tags.map(tag => {
+            if (!(ALLOWED_TAGS.includes(tag))) return '1=0';
+            return 'is_' + tag + ' = 1';
+        });
+        filter += " AND (" + tagConditions.join(" OR ") + ")";
+    }
+            if (LOG_LVL >= 4) console.log(`${get_time()} Attempting to fetch from database: SELECT id FROM locations WHERE ${filter} ORDER BY RAND() LIMIT 1;`)
+    const result = await db.unsafe('SELECT id FROM locations WHERE ' + filter + 'ORDER BY RAND() LIMIT 1');
     
     if (result.length === 0) {
                 if (LOG_LVL >= 1) console.error(`${get_time()} No location exists for difficulties | ${difs} | and tags | ${tags} |`);
@@ -227,7 +220,7 @@ export async function addLocation(locinfo: LocInfo, img: Blob): Promise<boolean>
 
     if (locinfo.tags[0] === 'all') locinfo.tags = ALLOWED_TAGS;
     for (const tag of locinfo.tags) {
-        if (!(tag in ALLOWED_TAGS)) continue;
+        if (!(ALLOWED_TAGS.includes(tag))) continue;
         const tagName: string = "is_" + tag;
         await db.unsafe('UPDATE locations SET ' + tagName + ' = 1 WHERE id = ?', [lid]);
     };

@@ -232,10 +232,6 @@
     border: none;
     padding: 9px 18px;
     min-width:max-content;
-    font-size: 1.2em;
-    text-transform: uppercase;
-    letter-spacing: 0.13em;
-    font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
