@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Description Here">
+    <title>MonGuessr</title>
+    <link rel="icon" href="/assets/icon.png">
+    <link rel="stylesheet" href="./admin.style.css">
+    <!--Compiled from typescript with Bun-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="./admin.js"></script>
+</head>
+<body>
+  <div class="master">
+  <div class="shell">
+    <div class="shell-header">
+      <div>
+        <div class="shell-title">MONGUESSR ADMIN PANEL</div>
+      </div>
+    </div>
+
+    <div id="upload-a-photo">
+      <section class="panel" id="customPanel">
+        <header class="panel-header">
+          <div>
+            <div class="panel-title">UPLOAD A PHOTO</div>
+            <input type="file" id="photoInput" accept="image/*" capture="environment">
+            <div class="panel-subtitle">
+              Select a difficulty and any number of tags.
+            </div>
+          </div>
+        </header>
+
+        <!-- difficulty -->
+        <div class="difficulty-row" id="difficultyRow">
+          <button class="difficulty-chip" data-tag="easy">
+            <span class="level-dot"></span>
+            <span class="label-main">Easy</span>
+          </button>
+
+          <button class="difficulty-chip" data-tag="medium">
+            <span class="level-dot"></span>
+            <span class="label-main">Medium</span>
+          </button>
+
+          <button class="difficulty-chip" data-tag="hard">
+            <span class="level-dot"></span>
+            <span class="label-main">Hard</span>
+          </button>
+
+          <button class="difficulty-chip" data-tag="impossible">
+            <span class="level-dot"></span>
+            <span class="label-main">Impossible</span>
+          </button>
+        </div>
+
+        <br>
+        <div class="chip-row", id="tags-list">
+          <button class="tag-chip" data-tag-type="location" data-tag="indoor">
+            <span class="dot"></span>
+            Indoor
+          </button>
+          <button class="tag-chip" data-tag-type="location" data-tag="outdoor">
+            <span class="dot"></span>
+            Outdoor
+          </button>
+          <button class="tag-chip" data-tag-type="location" data-tag="carparks">
+            <span class="dot"></span>
+            Car Parks
+          </button>
+        </div>
+      </section>
+    </div>
+  <div id="mapContainer">
+      <section class="panel" id="customPanel">
+        <header class="panel-header">
+          <div>
+            <div class="panel-title">SELECT THE LOCATION</div>
+            <div class="panel-subtitle">
+              Be extremely precise with your pin placement.
+            </div>
+          </div>
+        </header>
+        <div id="map"></div>
+
+    
+
+      </section>
+    </div>
+    <div class="bottom-row">
+        <button id="sendBtn" type="button">
+            SUBMIT TO DB
+        </button>
+    </div>
+  </div>
+  </div>
+</body>
+</html>

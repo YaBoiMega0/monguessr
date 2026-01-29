@@ -177,15 +177,15 @@ function validCoordinates(lat: number, long: number): boolean {
 
 function latLongToCoords(lat: number, long: number): [number, number] {
     // Translate 0.016 lat/long into 2 million integer units
-    const x: number = Math.ceil((long - 145.127) * 125000000);
-    const y: number = Math.ceil((lat + 37.916) * 125000000);
+    const x: number = Math.ceil((long - leftBoundary) * 125000000);
+    const y: number = Math.ceil((lat - bottomBoundary) * 125000000);
     return [x, y]
 }
 
 function coordsToLatLong(x: number, y: number): [number, number] {
     // Translate 0-2 million integers to floats 0-0.016 lat/long 
-    const long: number = (x / 125000000) + 145.127;
-    const lat: number = (y / 125000000) - 37.916;
+    const long: number = (x / 125000000) + leftBoundary;
+    const lat: number = (y / 125000000) + bottomBoundary;
     return [lat, long]
 }
 

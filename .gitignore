@@ -1,7 +1,6 @@
 # Private directories
 examples
 images
-private
 
 # dependencies (bun install)
 node_modules
