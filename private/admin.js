@@ -103,7 +103,7 @@ AVIF Encoding Failed.`), "image/avif", 0.9);
 }
 async function submitLocation() {
   if (!pImg)
-    return false;
+    return;
   const conf = getConfig();
   const img = pImg;
   const fd = new FormData;
@@ -113,7 +113,13 @@ async function submitLocation() {
     method: "POST",
     body: fd
   });
-  return response.ok;
+  if (response.status === 200) {
+    alert("Successfully added location to database!");
+    imgInput.files = null;
+  } else {
+    alert(`ERROR:
+Unable to add location to database.`);
+  }
 }
 function bindEvents() {
   difficultyChips.forEach((chip) => {

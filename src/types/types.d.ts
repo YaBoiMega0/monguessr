@@ -20,9 +20,16 @@ export type LocResponse = {
   curr_round: number;
 };
 
+export type LocInfo = {
+  difficulty: Difficulty;
+  tags: Tag[];
+  xpos: number;
+  ypos: number;
+};
+
 export type Difficulty = "easy" | "medium" | "hard" | "impossible";
 type GameMode = "standard" | "endless";
-export type Tag = "all" | "indoor" | "outdoor" | "carparks";
+export type Tag = "all" | "indoor" | "outdoor" | "carpark";
 
 export type StandardParams = {
     gamemode: GameMode;

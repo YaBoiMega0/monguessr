@@ -1,7 +1,7 @@
 import { serve } from 'bun';
-import { type Params, type LocGuess, type GameState, type LocResponse } from './types/types'
+import { type Params, type LocGuess, type GameState, type LocResponse, type LocInfo } from './types/types'
 import { get_time, calcDist, calcScore, generateSessionID } from './utils.ts'
-import { newSession, getGameState, validateSession, killSession, getPicture, advanceGameState } from './db_interface.ts';
+import { newSession, getGameState, validateSession, killSession, getPicture, advanceGameState, addLocation } from './db_interface.ts';
 
 const port = Bun.env.PORT || 8000;
 const ADMIN_PW: string = Bun.env.PASS || 'admin';
@@ -93,8 +93,16 @@ async function process_api(path: string, req: Request): Promise<Response | null>
         const pic = await getPicture(sessionid)
         if (LOG_LVL >= 4) console.log(`${get_time()} Responding to getpicture with: ${pic.type}`)
         return new Response(pic, {
-            headers: {'Content-Type': 'image/jpeg'}
+            headers: {'Content-Type': 'image/avif'}
         })
+    }
+    if (path === `/${ADMIN_PW}/api/uploadpicture`) {
+        const fd = await req.formData() as FormData;
+        const locinfo = JSON.parse(fd.get('settings') as string) as LocInfo;
+        const newImg = fd.get('image') as Blob;
+        const success: boolean = await addLocation(locinfo, newImg);
+                if (LOG_LVL >= 3) console.log(`${get_time()} New picture uploaded. Success = ${success}`);
+        if (success) return new Response("Success", { status: 200 });
     }
     return null
 }
@@ -106,7 +114,7 @@ async function serve_admin(path: string): Promise<Response> {
     const filePath = `./private${path}`;
     const file = Bun.file(filePath);
 
-    if (LOG_LVL >= 2) console.warn(`${get_time()} Serving private page ${filePath}`)
+    if (LOG_LVL >= 4) console.log(`${get_time()} Serving private page ${filePath}`)
     if (await file.exists()) return new Response(file);
 
     return new Response('Not Found', { status: 404 });

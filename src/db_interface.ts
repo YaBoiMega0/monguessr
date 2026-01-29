@@ -1,9 +1,10 @@
-import { type Params, type StandardParams, type CustomParams, type GameState, type Difficulty, type Tag } from './types/types'
+import { type Params, type StandardParams, type CustomParams, type GameState, type Difficulty, type Tag, type LocInfo } from './types/types'
 import { SQL } from 'bun'
 import { get_time } from './utils.ts';
 
 const ENDLESS_START_HP = Number.parseInt(Bun.env.ENDLESS_START_HP || '5000')
 const LOG_LVL = Number.parseInt(Bun.env.LOG_LVL || '1')
+const ALLOWED_TAGS: Tag[] = ['indoor', 'outdoor', 'carpark'];
 let dbpool: SQL | null = null;
 
 async function getDB(): Promise<SQL> {
@@ -194,9 +195,46 @@ export async function getPicture(sessionid: number): Promise<Blob> {
     const locid = result[0].locationid
 
     // access filesystem for corresponding location image
-    const file = Bun.file(`./images/${locid}.jpg`);
+    const file = Bun.file(`./images/${locid}.avif`);
     if (!await file.exists()) {
-        return Bun.file(`./images/ERROR.jpg`);
+        return Bun.file(`./images/ERROR.avif`);
     }
     return file
+}
+
+export async function addLocation(locinfo: LocInfo, img: Blob): Promise<boolean> {
+    // Enforce parameter existence and correct formatting.
+    if (!locinfo.difficulty || !locinfo.xpos || !locinfo.ypos) return false;
+    const dif = locinfo.difficulty.slice(0,1).toUpperCase();
+    const x = ((locinfo.xpos >= 0) && (locinfo.xpos <= 2000000) ? locinfo.xpos :
+               Math.max(Math.min(locinfo.xpos, 2000000), 0));
+    const y = ((locinfo.ypos >= 0) && (locinfo.ypos <= 2000000) ? locinfo.ypos :
+               Math.max(Math.min(locinfo.ypos, 2000000), 0));
+
+    // Insert location into locations table, then add tags
+            if (LOG_LVL >= 4) console.log(`${get_time()} Attempting to add location to database at (${x}, ${y}) - Difficulty=${dif}`);
+    const db = await getDB();
+    let result = await db`INSERT INTO
+                            locations(difficulty, xpos, ypos)
+                            VALUES(${dif}, ${x}, ${y})`
+    
+    if (result.affectedRows <= 0) return false;
+
+    result = await db`SELECT LAST_INSERT_ID() as lid;`;
+    const lid: number = result[0].lid;
+            if (LOG_LVL >= 4) console.log(`${get_time()} Created new location with ID ${lid}`);
+    if (!(lid > 0)) return false;
+
+    if (locinfo.tags[0] === 'all') locinfo.tags = ALLOWED_TAGS;
+    for (const tag of locinfo.tags) {
+        if (!(tag in ALLOWED_TAGS)) continue;
+        const tagName: string = "is_" + tag;
+        await db.unsafe('UPDATE locations SET ' + tagName + ' = 1 WHERE id = ?', [lid]);
+    };
+
+    // Write image data to file
+    const imgBytes = new Uint8Array(await img.arrayBuffer());
+    await Bun.write(`./images/${lid}.avif`, imgBytes)
+
+    return Bun.file(`./images/${lid}.avif`).exists()
 }

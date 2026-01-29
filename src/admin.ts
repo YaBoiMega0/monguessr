@@ -137,8 +137,8 @@ async function preprocessImage(imageFile: File): Promise<Blob> {
   });
 }
 
-async function submitLocation(): Promise<boolean> {
-    if (!pImg) return false;
+async function submitLocation() {
+    if (!pImg) return;
     
     const conf = getConfig();
     const img = pImg;
@@ -152,7 +152,12 @@ async function submitLocation(): Promise<boolean> {
         body: fd,
     });
 
-    return response.ok
+    if (response.status === 200) {
+        alert("Successfully added location to database!")
+        imgInput.files = null;
+    } else {
+        alert("ERROR:\nUnable to add location to database.")
+    }
 };
 
 function bindEvents() {
