@@ -50,14 +50,17 @@ function updateModeUI() {
     } else if (currentMode === MODE_CUSTOM) {
     standardPanel.hidden = true;
     customPanel.hidden = false;
-    updateCustomUI();
     }
 
-    updatePreviewText();
+    updateCustomUI();
 }
 
 function updateCustomUI() {
-    if (currentMode != MODE_CUSTOM) { return }
+    if (currentMode !== MODE_CUSTOM) {
+        startBtn.disabled = false;
+        updatePreviewText();
+        return
+    }
     
     const gamemode = customGamemode.value;
     let roundsPanel = document.getElementById("numRounds")!;
@@ -90,6 +93,9 @@ function updatePreviewText() {
     const gamemode = customGamemode.value;
     let roundsValue = DEFAULT_ROUNDS;
     let healthValue = DEFAULT_HEALTH;
+
+    startBtn.disabled = !(Boolean(difficultyTags.length));
+
     try {
         roundsValue = Number(customRounds.value);
     } catch (error) {};

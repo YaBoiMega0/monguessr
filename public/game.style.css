@@ -33,6 +33,11 @@
     cursor: crosshair !important;
 }
 
+.leaflet-zoom-animated {
+    border: none;
+    cursor: crosshair !important;
+}
+
 .mainContainer {
     background: radial-gradient(circle at top, #1a2640 0, #050814 55%);
     color: var(--text);

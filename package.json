@@ -13,7 +13,8 @@
   "scripts": {
     "start": "bun run ./src/server.ts",
     "dev": "bun run ./src/server.ts --watch",
-    "buildgame": "bun build --outfile=game[hash].js --outdir=./src/out --target browser --external leaflet ./src/game.ts"
+    "buildgame": "bun build --outfile=game[hash].js --outdir=./src/out --target browser --external leaflet ./src/game.ts",
+    "buildselect": "bun build --outfile=select[hash].js --outdir=./src/out --target browser ./src/select.ts"
   },
   "dependencies": {
     "bun-mysql": "^0.0.1",

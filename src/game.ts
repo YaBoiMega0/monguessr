@@ -243,33 +243,12 @@ async function submitGuess() {
 }
 
 async function nextRound() {
-    if (gameState.gamemode === 'standard' && gameState.curr_round > gameState.gamemodeParam) {
-        fetch(`./api/killsession`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionid })
-        });
-
-        // Some custom popup with your score here
-
-        alert(`Game Over! Final Score: ${gameState.score}`);
-        window.location.href = "./";
+    if ((gameState.gamemode === 'standard' && gameState.curr_round > gameState.gamemodeParam) || (
+         gameState.gamemode === 'endless' && gameState.score <= 0)) {
+        endGame();
         return;
-
-    } else if (gameState.gamemode === 'endless' && gameState.score <= 0) {
-        fetch(`./api/killsession`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionid })
-        });
-
-        // Some custom popup with your score here
-
-        alert(`Game Over! Final Score: ${gameState.curr_round}`);
-        window.location.href = "./";
-        return;
-    }
-    updateRound()
+    };
+    updateRound();
     guessed = false;
     submitBtn.style.display = 'block';
     nextBtn.style.display = 'none';
@@ -316,6 +295,17 @@ function updateScore(instant: boolean = false) {
         requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+}
+
+function endGame() {
+    fetch(`./api/killsession`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionid })
+        });
+    sessionStorage.clear()
+    alert(`Game Over! Final Score: ${gameState.gamemode === 'endless' ? gameState.curr_round : gameState.score}`);
+    window.location.href = "./";
 }
 
 function bindEvents() {

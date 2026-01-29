@@ -196,23 +196,8 @@ Guess submission failed. Please start a new session and try again.`);
   saveProgress();
 }
 async function nextRound() {
-  if (gameState.gamemode === "standard" && gameState.curr_round > gameState.gamemodeParam) {
-    fetch(`./api/killsession`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionid })
-    });
-    alert(`Game Over! Final Score: ${gameState.score}`);
-    window.location.href = "./";
-    return;
-  } else if (gameState.gamemode === "endless" && gameState.score <= 0) {
-    fetch(`./api/killsession`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sessionid })
-    });
-    alert(`Game Over! Final Score: ${gameState.curr_round}`);
-    window.location.href = "./";
+  if (gameState.gamemode === "standard" && gameState.curr_round > gameState.gamemodeParam || gameState.gamemode === "endless" && gameState.score <= 0) {
+    endGame();
     return;
   }
   updateRound();
@@ -256,6 +241,16 @@ function updateScore(instant = false) {
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+}
+function endGame() {
+  fetch(`./api/killsession`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sessionid })
+  });
+  sessionStorage.clear();
+  alert(`Game Over! Final Score: ${gameState.gamemode === "endless" ? gameState.curr_round : gameState.score}`);
+  window.location.href = "./";
 }
 function bindEvents() {
   submitBtn.onclick = submitGuess;
