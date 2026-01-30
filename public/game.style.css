@@ -1,26 +1,43 @@
 :root {
-    --bg: #050814;
-    --bg-elevated: #101522;
+    --bg: rgb(5, 8, 20);
+    --bg-elevated: rgb(26, 38, 64);
     --accent-root: 0, 100, 172;
     --accent: rgb(var(--accent-root));
-    --accent-soft: rgba(var(--accent-root) 0.15);
-    --accent-strong: rgba(var(--accent-root) 0.3);
-    --text: #f5f7ff;
-    --muted: #9aa0c2;
+    --accent-soft: rgba(var(--accent-root), 0.15);
+    --accent-medium: rgba(var(--accent-root), 0.3);
+    --accent-strong: rgba(var(--accent-root), 0.6);
+    --text: rgb(245, 247, 255);
+    --muted: rgb(154, 160, 194);
     --highlight1: rgba(255, 255, 255, 0.02);
     --highlight2: rgba(255, 255, 255, 0.06);
-    --test: rgb(232, 92, 211);
-    --col3:rgb(0, 100, 172);
-
-    --border-radius: 10px;
-    --transition-fast: 0.15s ease-out;
+    --pill-bg :rgba(15, 17, 32, 0.96);
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Leela", sans-serif;
+}
+
+.master {
+    background: radial-gradient(circle at top, var(--bg-elevated) 0, var(--bg) 60%);
+    color: var(--text);
+    min-height: 100vh;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+* a{
+    color: var(--accent);
+    text-decoration: none;
+}
+
+body{
+    overflow: hidden;
 }
 
 .leaflet-control-container {
@@ -36,16 +53,6 @@
 .leaflet-zoom-animated {
     border: none;
     cursor: crosshair !important;
-}
-
-.mainContainer {
-    background: radial-gradient(circle at top, #1a2640 0, #050814 55%);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
 }
 
 .gameContainer {
@@ -127,7 +134,7 @@
     height: 100%;
 }
 
-.advButton {
+.mainBtn {
     position: relative;
     width: 100%;
     z-index: 401;
@@ -151,12 +158,12 @@
     transition: all 0.3s ease;
 }
 
-.advButton:disabled{
+.mainBtn:disabled{
     background: linear-gradient(135deg, hsl(220, 30%, 65%), hsl(253, 30%, 48%));
     color: #cccccc;
     box-shadow: 0 0 0;
 }
 
-.advButton:disabled:hover{
+.mainBtn:disabled:hover{
     cursor: not-allowed;
-} 
+}

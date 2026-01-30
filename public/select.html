@@ -117,19 +117,19 @@
           <div class="panel-subtitle" style="flex-basis:100%; margin-bottom:4px;">
             Tags (select multiple):
           </div>
-          <button class="tag-chip all" id="allToggle">
+          <button class="tag-chip all" data-tag="all" id="allToggle">
             <span class="dot"></span>
             ALL
           </button>
-          <button class="tag-chip" data-tag-type="location" data-tag="indoor">
+          <button class="tag-chip" data-tag="indoor">
             <span class="dot"></span>
             Indoor
           </button>
-          <button class="tag-chip" data-tag-type="location" data-tag="outdoor">
+          <button class="tag-chip" data-tag="outdoor">
             <span class="dot"></span>
             Outdoor
           </button>
-          <button class="tag-chip" data-tag-type="location" data-tag="carpark">
+          <button class="tag-chip" data-tag="carpark">
             <span class="dot"></span>
             Car Parks
           </button>
@@ -184,7 +184,7 @@
         Mode: <strong>Standard</strong> | Difficulty: <strong>Easy</strong> | 5 rounds
       </div>
       <div class="controls">
-        <button id="startBtn" type="button">
+        <button class="mainBtn" id="startBtn" type="button">
           Start game
         </button>
       </div>

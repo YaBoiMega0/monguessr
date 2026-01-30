@@ -1,26 +1,42 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root {
+    --bg: rgb(5, 8, 20);
+    --bg-elevated: rgb(26, 38, 64);
+    --accent-root: 0, 100, 172;
+    --accent: rgb(var(--accent-root));
+    --accent-soft: rgba(var(--accent-root), 0.15);
+    --accent-medium: rgba(var(--accent-root), 0.3);
+    --accent-strong: rgba(var(--accent-root), 0.6);
+    --text: rgb(245, 247, 255);
+    --muted: rgb(154, 160, 194);
+    --highlight1: rgba(255, 255, 255, 0.02);
+    --highlight2: rgba(255, 255, 255, 0.06);
 }
 
-:root{
-    --col1:rgb(29, 29, 27); 
-    --col2:rgb(255, 255, 255);
-    --col3:rgb(0, 100, 172);
-    --glow: rgba(0, 100, 172, 0.281);
-    --brightness:100%;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Leela", sans-serif;
+}
+
+.master {
+    background: radial-gradient(circle at top, var(--bg-elevated) 0, var(--bg) 60%);
+    color: var(--text);
+    min-height: 100%;
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
 }
 
 * a{
-    color: var(--col2);
+    color: var(--accent);
     text-decoration: none;
 }
 
 body{
-    background-color: var(--col1);
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 .center{
@@ -30,31 +46,64 @@ body{
 }
 
 #mainlogo{
-    background-color: var(--col3);
+    background-color: var(--accent);
     width: 100vw;
     height: 10vh;
     max-height: 10%;
     z-index: 10;
-    box-shadow: 0px 0px 30px 0px black;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
+
 #mainlogo img{
     height: 8vh;
 }
 
-.main{
-    height: 90vh;
-    display: flex;
-    flex-direction: row;
+.mainBtn {
+    border-radius: 999px;
+    border: none;
+    padding: 1vh 2vw;
+    min-width:max-content;
+    cursor: pointer;
+    align-items: center;
+    background: linear-gradient(135deg, #4f8bff, #7f5dff);
+    color: #ffffff;
+    box-shadow: 0 14px 35px var(--accent-medium);
+    transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s ease-out;
 }
 
-.main div{
-    width: 85vw;
-    height: 100%;
-    background-color: var(--glow);
-    box-shadow:inset 0px 0px 100px 100px var(--col1);
+.mainBtn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+    box-shadow: 0 18px 40px var(--accent-strong);
+}
+
+.mainBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 10px 26px var(--accent-medium);
+}
+
+h1{
+    font-size: 4vw;
+    font-weight: bold;
+    color: var(--text);
+    text-shadow: 4px 4px 0px var(--highlight2);
+}
+
+h2{
+    font-size: 3vw;
+    font-weight: bold;
+    color: var(--text);
+    text-shadow: 4px 4px 0px var(--highlight1);
+}
+
+p{
+    font-size: 1.8vw;
+    padding-inline: 5vw;
+    color: var(--text);
+    text-shadow: 4px 4px 0px var(--highlight1);
 }
 
 .home{
@@ -69,94 +118,19 @@ body{
     align-items: center;
     gap: 1vw;
 }
-h1{
-    font-family: "Leela", sans-serif;
-    font-size: 4vw;
-    font-weight: bold;
-    color: var(--col2);
-    text-shadow: 4px 4px 0px var(--glow);
-}
-h2{
-    font-family: "Leela", sans-serif;
-    font-size: 3vw;
-    font-weight: bold;
-    color: var(--col2);
-    text-shadow: 4px 4px 0px var(--glow);
-}
-h3{
-    font-family: "Leela", sans-serif;
-    font-size: 1.9vw;
-    font-weight: bold;
-    color: var(--col2);
-    text-shadow: 4px 4px 0px var(--glow);
-}
-h4{
-    font-family: "Leela", sans-serif;
-    font-size: 1.5vw;
-    font-weight: bold;
-    color: var(--col2);
-    text-shadow: 4px 4px 0px var(--glow);
-}
-p{
-    font-family: "Leela", sans-serif;
-    font-size: 1.8vw;
-    padding-left: 5vw;
-    padding-right: 5vw;
-    color: var(--col2);
-    text-shadow: 4px 4px 0px var(--glow);
-}
-
-.home a{
-    height: 5vw;
-}
-
-.home h3{
-    line-height: 20%;
-}
-
-.home button{
-    border-color: var(--col2);
-    border-radius: 2vw;
-    height: 5vw;
-    min-width: 22vw;
-    margin: 2vw;
-    background-color: transparent;
-}
-.home button h2{
-    text-shadow: 2px 2px 0px black;
-}
-.home button:hover{
-    border-color: var(--col1);
-    background-color: var(--col2);
-    transition-duration: 100ms;
-    cursor: pointer;
-    box-shadow:0px 0px 50px 0px var(--col2);
-    z-index: 10;
-    transition-duration: 200ms;
-}
-.home button:hover h2{
-    color: var(--col1);
-    text-shadow: 2px 2px 0px var(--glow);
-}
-.home button:active{
-    background-color: var(--col2);
-    border-color: var(--col1);
-}
-.home button:active h2{
-    color: var(--col1);
-}
 
 #bugreport{
     text-decoration: underline;
 }
+
 #bugreport:hover{
-    color:var(--col3);
+    color:var(--accent);
     cursor: pointer;
 }
 
 #disclaimer{
+    color: var(--muted);
     font-size: 0.8vw;
     max-width: 50%;
     padding: 1vw;
-    opacity: 0.8;
 }
