@@ -65,8 +65,7 @@ body{
     position: relative;
     max-width: 90vw;
     max-height: 90vh;
-    min-height: auto;
-    min-width: auto;
+    
     z-index: 2;
 }
 
@@ -82,19 +81,41 @@ body{
 
 .gameHUD {
     position: absolute;
-    justify-content: center;
+    top: 3vh;
+    left: 3vw;
+    right: 3vw;
+    justify-content: space-between;
     display: flex;
-    top: 1vw;
-    z-index: 3
+    z-index: 3;
 }
 
 #timer {
     position: absolute;
-    align-content: center;
-    justify-content: center;
-    top: 2vw;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 3;
+    max-width: 20vw;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    padding: 12px 24px;
+    font-size: 2.5em;
+    font-weight: 600;
+    box-shadow: 0 8px 24px var(--accent-medium);
 }
+
+#currentRoundText,
+#scoreText {
+    background: var(--bg-elevated);
+    border-radius: 999px;
+    border: 2px solid var(--accent);
+    padding: 12px 20px;
+    font-size: 2.5em;
+    font-weight: 600;
+    box-shadow: 0 8px 24px var(--accent-medium);
+}
+
 
 .mapContainer {
     position: absolute;
@@ -125,7 +146,7 @@ body{
 }
 
 .mapContainer:hover {
-    width: 30vw;
+    width: 40vw;
     height: 40vh;
 }
 
@@ -142,9 +163,9 @@ body{
     border-radius: 10px;
     margin-bottom: 8px;
     padding: 9px 18px;
-    font-size: 1em;
+    font-size: 2em;
     text-transform: uppercase;
-    letter-spacing: 0.13em;
+    letter-spacing: 0.07em;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
