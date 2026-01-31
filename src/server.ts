@@ -1,7 +1,7 @@
 import { serve } from 'bun';
 import { type Params, type LocGuess, type GameState, type LocResponse, type LocInfo } from './types/types'
 import { get_time, calcDist, calcScore, generateSessionID } from './utils.ts'
-import { newSession, getGameState, validateSession, killSession, getPicture, advanceGameState, addLocation } from './db_interface.ts';
+import { newSession, getGameState, validateSession, killSession, getPicture, advanceGameState, addLocation, garbageCollectSessions } from './db_interface.ts';
 
 const port = Bun.env.PORT || 8000;
 const ADMIN_PW: string = Bun.env.PASS || 'admin';
@@ -119,5 +119,10 @@ async function serve_admin(path: string): Promise<Response> {
 
     return new Response('Not Found', { status: 404 });
 }
+
+setInterval(async () => {
+    if (LOG_LVL >= 3) console.log(`${get_time()} Running session garbage collection`);
+    await garbageCollectSessions(60); // Delete all inactive for longer than 60 minutes
+}, 1000 * 3600);
 
 console.log(`${get_time()} MonGuessr LIVE on http://localhost:${port}`);
