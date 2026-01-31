@@ -1,0 +1,30 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+     - .env
+    volumes:
+      - .:/app
+      - images_data:/app/images
+    restart: unless-stopped
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: super_secure_password_2
+      MYSQL_DATABASE: mguessr
+      MYSQL_USER: backend
+      MYSQL_PASSWORD: super_secure_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: --authentication_policy=caching_sha2_password
+
+volumes:
+  mysql_data:
+  images_data:
