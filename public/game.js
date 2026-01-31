@@ -31,11 +31,15 @@ var roundElement;
 var imageElement;
 var submitBtn;
 var nextBtn;
+var resultPopup;
+var resultDistance;
+var resultScoreDiff;
+var resultScoreLabel;
 var bottomBoundary = -37.916;
 var topBoundary = -37.905;
 var leftBoundary = 145.127;
 var rightBoundary = 145.143;
-var stopTimer;
+var stopTimer = null;
 document.addEventListener("DOMContentLoaded", async () => {
   setupUI();
   await loadNextPicture();
@@ -77,6 +81,11 @@ function setupUI() {
   imageElement = document.getElementById("currentPicture");
   submitBtn = document.getElementById("submitGuessButton");
   nextBtn = document.getElementById("nextRoundButton");
+  resultPopup = document.getElementById("resultPopup");
+  resultDistance = document.getElementById("resultDistance");
+  resultScoreDiff = document.getElementById("resultScoreDiff");
+  resultScoreLabel = document.getElementById("resultScoreLabel");
+  resultScoreLabel.textContent = gameState.gamemode === "endless" ? "health lost" : "points scored";
   updateRound();
   updateScore(true);
   if (Number.parseInt(gameState.timerSeconds) !== 0) {
@@ -84,6 +93,25 @@ function setupUI() {
   } else {
     timerElement.hidden = true;
   }
+}
+function animateCounter(element, before, after, prefix = "", suffix = "") {
+  let wait = false;
+  function tick() {
+    if (wait) {
+      wait = false;
+      requestAnimationFrame(tick);
+      return;
+    }
+    const dif = after - before;
+    if (dif === 0)
+      return;
+    const inc = Math.abs(dif) > 222 ? 111 : Math.abs(dif) > 22 ? 11 : 1;
+    before += dif < 0 ? -inc : inc;
+    element.textContent = prefix + before.toString() + suffix;
+    wait = true;
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
 }
 function startCountdown() {
   let timerInterval = null;
@@ -113,6 +141,19 @@ function startCountdown() {
     }
   };
 }
+function validCoordinates(lat, long) {
+  return leftBoundary < long && long < rightBoundary && bottomBoundary < lat && lat < topBoundary;
+}
+function latLongToCoords(lat, long) {
+  const x = Math.ceil((long - leftBoundary) * 125000000);
+  const y = Math.ceil((lat - bottomBoundary) * 125000000);
+  return [x, y];
+}
+function coordsToLatLong(x, y) {
+  const long = x / 125000000 + leftBoundary;
+  const lat = y / 125000000 + bottomBoundary;
+  return [lat, long];
+}
 async function loadNextPicture() {
   const response = await fetch(`./api/getpicture`, {
     method: "POST",
@@ -130,6 +171,7 @@ Failed to load picture. Please start a new session and try again.`);
   guessed = false;
   nextBtn.style.display = "none";
   submitBtn.style.display = "block";
+  resultPopup.style.display = "none";
   if (mapInstance) {
     mapInstance.eachLayer((layer) => {
       if (layer instanceof L.Marker || layer instanceof L.Polyline) {
@@ -139,24 +181,12 @@ Failed to load picture. Please start a new session and try again.`);
     mapInstance.setView([-37.91, 145.13], 16);
   }
 }
-function validCoordinates(lat, long) {
-  return leftBoundary < long && long < rightBoundary && bottomBoundary < lat && lat < topBoundary;
-}
-function latLongToCoords(lat, long) {
-  const x = Math.ceil((long - leftBoundary) * 125000000);
-  const y = Math.ceil((lat - bottomBoundary) * 125000000);
-  return [x, y];
-}
-function coordsToLatLong(x, y) {
-  const long = x / 125000000 + leftBoundary;
-  const lat = y / 125000000 + bottomBoundary;
-  return [lat, long];
-}
 async function submitGuess() {
   if (guessed || !guessPos || !mapInstance)
     return;
   const [xpos, ypos] = guessPos;
-  stopTimer();
+  if (stopTimer)
+    stopTimer();
   const guess = { sessionid, xpos, ypos };
   const response = await fetch(`./api/submitguess`, {
     method: "POST",
@@ -169,10 +199,12 @@ Guess submission failed. Please start a new session and try again.`);
     return;
   }
   const result = await response.json();
-  guessed = true;
+  const distance = result.distance;
+  const scoreDiff = result.score - gameState.score;
   gameState.score = result.score;
   gameState.curr_round = result.curr_round;
-  console.log(result.distance);
+  animateCounter(resultDistance, 0, distance, "", "m");
+  animateCounter(resultScoreDiff, 0, scoreDiff);
   updateScore();
   if (result.xpos !== null && result.ypos !== null) {
     const [rlat, rlong] = coordsToLatLong(result.xpos, result.ypos);
@@ -192,7 +224,9 @@ Guess submission failed. Please start a new session and try again.`);
   submitBtn.style.display = "none";
   submitBtn.disabled = true;
   nextBtn.style.display = "block";
+  resultPopup.style.display = "flex";
   guessPos = null;
+  guessed = true;
   saveProgress();
 }
 async function nextRound() {
@@ -206,7 +240,8 @@ async function nextRound() {
   nextBtn.style.display = "none";
   saveProgress();
   await loadNextPicture();
-  stopTimer = startCountdown();
+  if (Number.parseInt(gameState.timerSeconds) !== 0)
+    stopTimer = startCountdown();
 }
 function updateRound() {
   if (gameState.gamemode === "standard") {
@@ -222,25 +257,7 @@ Please start a new session and try again.`);
 function updateScore(instant = false) {
   if (instant)
     scoreElement.textContent = `${gameState.gamemode === "standard" ? "Points" : "Health"}: ${Math.max(0, gameState.score)}`;
-  const targetScore = gameState.score;
-  let currentScore = Number.parseInt(scoreElement.textContent.slice(7));
-  let wait = false;
-  function tick() {
-    if (wait) {
-      wait = false;
-      requestAnimationFrame(tick);
-      return;
-    }
-    const dif = targetScore - currentScore;
-    if (dif === 0)
-      return;
-    const inc = Math.abs(dif) > 222 ? 111 : Math.abs(dif) > 22 ? 11 : 1;
-    currentScore += dif < 0 ? -inc : inc;
-    scoreElement.textContent = `${gameState.gamemode === "standard" ? "Points" : "Health"}: ${Math.max(0, currentScore)}`;
-    wait = true;
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
+  animateCounter(scoreElement, Number.parseInt(scoreElement.textContent.slice(7)), Math.max(0, gameState.score), gameState.gamemode === "standard" ? "Points: " : "Health: ");
 }
 function endGame() {
   fetch(`./api/killsession`, {
@@ -264,6 +281,8 @@ function bindEvents() {
   if (!mapInstance)
     return;
   mapInstance.on("click", (e) => {
+    if (guessed)
+      return;
     if (validCoordinates(e.latlng.lat, e.latlng.lng)) {
       if (submitBtn.disabled)
         submitBtn.disabled = false;

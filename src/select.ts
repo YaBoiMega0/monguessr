@@ -73,6 +73,9 @@ function updateCustomUI() {
         roundsPanel.style.display = "none";
         healthPanel.style.display = "flex";
     }
+
+    startBtn.disabled = (getSelectedTags('difficulty').length > 0)
+
     updatePreviewText();
 }
 

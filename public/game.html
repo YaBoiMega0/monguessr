@@ -16,16 +16,26 @@
     <div class="master">
         <div class="gameHUD">
             <h2 id="currentRoundText">Round 1/5</h2>
-            <h2 id="scoreText">Points: 0</h2>
+            <h2 class="right" id="scoreText">Points: 0</h2>
             <h2 id="timer">5:00</h2>
         </div>
         <div class="gameContainer">
-            <div id="loadText" class="center">
+            <div id="loadText">
                 <p>image is taking longer than expected to load... please check your connection or wait</p>
             </div>
             <img id="currentPicture">
         </div>
         <div class="mapContainer">
+            <div class="resultPopup" id="resultPopup" style="display:none;">
+                <div class="resultColumn">
+                    <span class="resultMain" id="resultDistance">0m</span>
+                    <span class="resultSub">distance from location</span>
+                </div>
+                <div class="resultColumn right">
+                    <span class="resultMain" id="resultScoreDiff">+0</span>
+                    <span class="resultSub" id="resultScoreLabel">points scored</span>
+                </div>
+            </div>
             <button class="mainBtn" id="submitGuessButton" disabled>Submit (SPACE)</button>
             <button class="mainBtn" id="nextRoundButton" style="display:none;">Next (SPACE)</button>
             <div id="map"></div>

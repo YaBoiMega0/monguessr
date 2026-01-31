@@ -40,6 +40,10 @@ body{
     overflow: hidden;
 }
 
+.right{
+    text-align: right;
+}
+
 .leaflet-control-container {
     transition: none !important;
     transform: none !important;
@@ -65,7 +69,6 @@ body{
     position: relative;
     max-width: 90vw;
     max-height: 90vh;
-    
     z-index: 2;
 }
 
@@ -116,28 +119,30 @@ body{
     box-shadow: 0 8px 24px var(--accent-medium);
 }
 
-
 .mapContainer {
     position: absolute;
     bottom: 3vw;
     right: 3vw;
-    min-width: 300px;
-    min-height: 200px;
+    min-width: 350px;
+    min-height: 250px;
     width: 20vw;
     height: 20vh;
     z-index: 2;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
+    align-items: stretch;
 }
 
 #map {
     position: relative;
     flex: 1;
+    order: 0;
     border: 2px solid var(--accent);
     border-radius: 10px;
     outline: none;
     overflow: hidden;
+    box-shadow: 0 14px 35px var(--accent-strong);
     transition: all 0.3s ease;
 }
 
@@ -171,9 +176,9 @@ body{
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgb(79, 139, 255), rgb(127, 93, 255));
+    background: linear-gradient(135deg, hsl(220, 100%, 65%), hsl(253, 100%, 68%));
     color: #ffffff;
-    box-shadow: 0 14px 35px rgba(var(--accent-root), 0.55);
+    box-shadow: 0 14px 35px var(--accent-strong);
     flex-shrink: 0;
     order: 2;
     transition: all 0.3s ease;
@@ -187,4 +192,35 @@ body{
 
 .mainBtn:disabled:hover{
     cursor: not-allowed;
+}
+
+.resultPopup {
+    position: relative;
+    padding: 8px 12px;
+    background: var(--pill-bg);
+    border-radius: 12px;
+    border: 2px solid var(--accent);
+    display: inline-flex;
+    justify-content: space-between;
+    color: var(--text);
+    z-index: 401;
+    box-shadow: 0 14px 35px var(--accent-strong);
+    flex-shrink: 0;
+    order: 1;
+    transition: all 0.3s ease;
+}
+
+.resultColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.resultMain {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.resultSub {
+    font-size: 0.75em;
+    color: var(--muted);
 }
