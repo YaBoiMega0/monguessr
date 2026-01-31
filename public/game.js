@@ -35,6 +35,7 @@ var resultPopup;
 var resultDistance;
 var resultScoreDiff;
 var resultScoreLabel;
+var mapContainer;
 var bottomBoundary = -37.916;
 var topBoundary = -37.905;
 var leftBoundary = 145.127;
@@ -85,6 +86,7 @@ function setupUI() {
   resultDistance = document.getElementById("resultDistance");
   resultScoreDiff = document.getElementById("resultScoreDiff");
   resultScoreLabel = document.getElementById("resultScoreLabel");
+  mapContainer = document.getElementById("mapContainer");
   resultScoreLabel.textContent = gameState.gamemode === "endless" ? "health lost" : "points scored";
   updateRound();
   updateScore(true);
@@ -126,7 +128,8 @@ function startCountdown() {
       clearInterval(timerInterval);
       timerElement.textContent = "0:00";
       if (!guessPos)
-        guessPos = [0, 0];
+        guessPos = [750000, 500000];
+      currentGuessMarker = L.marker(coordsToLatLong(guessPos[0], guessPos[1]), { icon: guessIcon }).addTo(mapInstance);
       submitGuess();
       return;
     }
@@ -172,6 +175,7 @@ Failed to load picture. Please start a new session and try again.`);
   nextBtn.style.display = "none";
   submitBtn.style.display = "block";
   resultPopup.style.display = "none";
+  mapContainer.classList.remove("submitted");
   if (mapInstance) {
     mapInstance.eachLayer((layer) => {
       if (layer instanceof L.Marker || layer instanceof L.Polyline) {
@@ -225,6 +229,7 @@ Guess submission failed. Please start a new session and try again.`);
   submitBtn.disabled = true;
   nextBtn.style.display = "block";
   resultPopup.style.display = "flex";
+  mapContainer.classList.add("submitted");
   guessPos = null;
   guessed = true;
   saveProgress();

@@ -32,7 +32,8 @@ let currentGuessMarker: L.Marker | null = null;
 let currentErrorPopup: L.Popup | null = null;
 let timerElement: HTMLElement, scoreElement: HTMLElement, roundElement: HTMLElement,
     imageElement: HTMLImageElement, submitBtn: HTMLButtonElement, nextBtn: HTMLButtonElement,
-    resultPopup: HTMLElement, resultDistance: HTMLElement, resultScoreDiff: HTMLElement, resultScoreLabel: HTMLElement;
+    resultPopup: HTMLElement, resultDistance: HTMLElement, resultScoreDiff: HTMLElement,
+    resultScoreLabel: HTMLElement, mapContainer: HTMLElement;
 
 const bottomBoundary = -37.916
 const topBoundary = -37.905
@@ -98,6 +99,7 @@ function setupUI() {
     resultDistance = document.getElementById('resultDistance') as HTMLElement;
     resultScoreDiff = document.getElementById('resultScoreDiff') as HTMLElement;
     resultScoreLabel = document.getElementById('resultScoreLabel') as HTMLElement;
+    mapContainer = document.getElementById('mapContainer') as HTMLElement;
 
     resultScoreLabel.textContent = (gameState.gamemode === 'endless' ? 'health lost' : 'points scored')
     updateRound();
@@ -149,7 +151,9 @@ function startCountdown() {
         if (timeLeft <= 0) {
             clearInterval(timerInterval!);
             timerElement.textContent = '0:00';
-            if (!guessPos) guessPos = [0, 0];
+            // Default guess on Campus Centre
+            if (!guessPos) guessPos = [750000, 500000];
+            currentGuessMarker = L.marker(coordsToLatLong(guessPos[0], guessPos[1]), { icon: guessIcon }).addTo(mapInstance!);
             submitGuess();
             return;
         }
@@ -209,6 +213,7 @@ async function loadNextPicture() {
     nextBtn.style.display = 'none';
     submitBtn.style.display = 'block';
     resultPopup.style.display = 'none';
+    mapContainer.classList.remove('submitted');
     
     // Reset map - clear markers/lines and reset view
     if (mapInstance) {
@@ -275,6 +280,7 @@ async function submitGuess() {
     submitBtn.disabled = true;
     nextBtn.style.display = 'block';
     resultPopup.style.display = 'flex';
+    mapContainer.classList.add('submitted');
     guessPos = null;
     guessed = true;
     saveProgress();

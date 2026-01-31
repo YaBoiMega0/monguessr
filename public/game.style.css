@@ -20,10 +20,26 @@
     font-family: -apple-system, BlinkMacSystemFont, "Leela", sans-serif;
 }
 
+#mainlogo{
+    background-color: var(--accent);
+    width: 100vw;
+    height: 10vh;
+    max-height: 10%;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#mainlogo img{
+    height: 8vh;
+}
+
 .master {
     background: radial-gradient(circle at top, var(--bg-elevated) 0, var(--bg) 60%);
     color: var(--text);
-    min-height: 100vh;
+    min-height: 90vh;
     min-width: 100%;
     display: flex;
     align-items: center;
@@ -84,9 +100,10 @@ body{
 
 .gameHUD {
     position: absolute;
-    top: 3vh;
+    top: 2vh;
     left: 3vw;
     right: 3vw;
+    height: 6vh;
     justify-content: space-between;
     display: flex;
     z-index: 3;
@@ -94,6 +111,7 @@ body{
 
 #timer {
     position: absolute;
+    top: 10vh;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -102,8 +120,8 @@ body{
     background: var(--bg-elevated);
     border-radius: 999px;
     border: 2px solid var(--accent);
-    padding: 12px 24px;
-    font-size: 2.5em;
+    padding: min(12px, 2vh) min(24px, 4vw);
+    font-size: min(2.5em, 5vw, 7vh);
     font-weight: 600;
     box-shadow: 0 8px 24px var(--accent-medium);
 }
@@ -113,10 +131,16 @@ body{
     background: var(--bg-elevated);
     border-radius: 999px;
     border: 2px solid var(--accent);
-    padding: 12px 20px;
-    font-size: 2.5em;
+    padding: 1vh 1vw;
+    font-size: min(4vh, 6vw);
     font-weight: 600;
     box-shadow: 0 8px 24px var(--accent-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 6vh;
+    line-height: 1.2;
+    text-align: center;
 }
 
 .mapContainer {
@@ -124,9 +148,9 @@ body{
     bottom: 3vw;
     right: 3vw;
     min-width: 350px;
-    min-height: 250px;
-    width: 20vw;
+    min-height: min(30vh, 250px);
     height: 20vh;
+    width: 20vw;
     z-index: 2;
     transition: all 0.3s ease;
     display: flex;
@@ -150,7 +174,8 @@ body{
     cursor: crosshair;
 }
 
-.mapContainer:hover {
+.mapContainer:hover,
+.mapContainer.submitted {
     width: 40vw;
     height: 40vh;
 }

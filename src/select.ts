@@ -9,24 +9,37 @@ let currentMode = MODE_STANDARD;
 let selectedDifficulty = "easy";
 let isAllSelected = false;
 
-// Properly typed DOM element selectors
-const modeTabs: NodeListOf<HTMLButtonElement> = document.querySelectorAll<HTMLButtonElement>(".mode-tab")!;
-const panelPrimaryTitle: HTMLElement = document.getElementById("panelPrimaryTitle")!;
-const panelPrimarySubtitle: HTMLElement = document.getElementById("panelPrimarySubtitle")!;
-const previewText: HTMLElement = document.getElementById("previewText")!;
-const difficultyChips: NodeListOf<HTMLButtonElement> = document.querySelectorAll<HTMLButtonElement>(".difficulty-chip")!;
-const tagChips: NodeListOf<HTMLButtonElement> = document.querySelectorAll<HTMLButtonElement>(".tag-chip")!;
-const customSettings: NodeListOf<HTMLElement> = document.querySelectorAll<HTMLElement>(".setting-pill")!;
-const customGamemode: HTMLSelectElement = document.getElementById("customGamemode")! as HTMLSelectElement;
-const customTimer: HTMLInputElement = document.getElementById("customTimer")! as HTMLInputElement;
-const customRounds: HTMLInputElement = document.getElementById("customRounds")! as HTMLInputElement;
-const customHealth: HTMLInputElement = document.getElementById("customHealth")! as HTMLInputElement;
-const customPanel: HTMLElement = document.getElementById("customPanel")!;
-const standardPanel: HTMLElement = document.getElementById("standardPanel")!;
-const startBtn: HTMLButtonElement = document.getElementById("startBtn")! as HTMLButtonElement;
-const allToggleBtn: HTMLButtonElement = document.getElementById("allToggle")! as HTMLButtonElement;
-const tagsList: HTMLElement = document.getElementById("tags-list")!;
+let modeTabs: NodeListOf<HTMLButtonElement>, panelPrimaryTitle: HTMLElement, panelPrimarySubtitle: HTMLElement,
+    previewText: HTMLElement, difficultyChips: NodeListOf<HTMLButtonElement>, tagChips: NodeListOf<HTMLButtonElement>,
+    customSettings: NodeListOf<HTMLElement>, customGamemode: HTMLSelectElement, customTimer: HTMLInputElement,
+    customRounds: HTMLInputElement, customHealth: HTMLInputElement, customPanel: HTMLElement, standardPanel: HTMLElement,
+    startBtn: HTMLButtonElement, allToggleBtn: HTMLButtonElement, tagsList: HTMLElement;
 
+document.addEventListener('DOMContentLoaded', async () => {
+    setupUI();
+    bindEvents();
+});
+
+function setupUI() {
+    modeTabs = document.querySelectorAll<HTMLButtonElement>(".mode-tab")!;
+    panelPrimaryTitle = document.getElementById("panelPrimaryTitle")!;
+    panelPrimarySubtitle = document.getElementById("panelPrimarySubtitle")!;
+    previewText = document.getElementById("previewText")!;
+    difficultyChips = document.querySelectorAll<HTMLButtonElement>(".difficulty-chip")!;
+    tagChips = document.querySelectorAll<HTMLButtonElement>(".tag-chip")!;
+    customSettings = document.querySelectorAll<HTMLElement>(".setting-pill")!;
+    customGamemode = document.getElementById("customGamemode")! as HTMLSelectElement;
+    customTimer = document.getElementById("customTimer")! as HTMLInputElement;
+    customRounds = document.getElementById("customRounds")! as HTMLInputElement;
+    customHealth = document.getElementById("customHealth")! as HTMLInputElement;
+    customPanel = document.getElementById("customPanel")!;
+    standardPanel = document.getElementById("standardPanel")!;
+    startBtn = document.getElementById("startBtn")! as HTMLButtonElement;
+    allToggleBtn = document.getElementById("allToggle")! as HTMLButtonElement;
+    tagsList = document.getElementById("tags-list")!;
+    
+    updateModeUI();
+}
 
 function updateModeUI() {
     modeTabs.forEach((tab) => {
@@ -158,8 +171,38 @@ function getSelectedTags(type: string, sentenceCase: boolean = true): string[] {
     ).map((chip) => (sentenceCase ? capitalize(chip.dataset.tag!) : chip.dataset.tag!));
 }
 
+function getConfig() {
+    if (currentMode === MODE_STANDARD || currentMode === MODE_ENDLESS) {
+    return {
+        gamemode: currentMode,
+        difficulty: selectedDifficulty || null,
+    };
+    }
 
-// Click events for all buttons 
+    const difficultyTags = getSelectedTags("difficulty", false);
+    const locationTags = getSelectedTags("location", false);
+
+    let roundsValue = DEFAULT_ROUNDS;
+    let healthValue = DEFAULT_HEALTH;
+    try {
+        roundsValue = Number(customRounds.value);
+    } catch (error) {};
+    try {
+        healthValue = Number(customHealth.value);
+    } catch (error) {};
+
+    return {
+    gamemode: customGamemode.value,
+    gamemodeParam: (customGamemode.value === "standard" ? 
+        Math.max(1, roundsValue) : Math.max(1, healthValue)
+    ),
+    timerSeconds: Number.parseInt(customTimer.value || '0'),
+    difficulties: difficultyTags,
+    tags: locationTags,
+    };
+}
+
+function bindEvents() {
 modeTabs.forEach((tab) => {
     tab.addEventListener("click", () => {
     const mode = tab.dataset.mode;
@@ -227,37 +270,6 @@ allToggleBtn.addEventListener("click", () => {
   updatePreviewText();
 });
 
-function getConfig() {
-    if (currentMode === MODE_STANDARD || currentMode === MODE_ENDLESS) {
-    return {
-        gamemode: currentMode,
-        difficulty: selectedDifficulty || null,
-    };
-    }
-
-    const difficultyTags = getSelectedTags("difficulty", false);
-    const locationTags = getSelectedTags("location", false);
-
-    let roundsValue = DEFAULT_ROUNDS;
-    let healthValue = DEFAULT_HEALTH;
-    try {
-        roundsValue = Number(customRounds.value);
-    } catch (error) {};
-    try {
-        healthValue = Number(customHealth.value);
-    } catch (error) {};
-
-    return {
-    gamemode: customGamemode.value,
-    gamemodeParam: (customGamemode.value === "standard" ? 
-        Math.max(1, roundsValue) : Math.max(1, healthValue)
-    ),
-    timerSeconds: Number.parseInt(customTimer.value || '0'),
-    difficulties: difficultyTags,
-    tags: locationTags,
-    };
-}
-
 startBtn.addEventListener("click", async () => {
     const conf = getConfig();
     console.log("Starting game with:", conf);
@@ -279,5 +291,4 @@ startBtn.addEventListener("click", async () => {
     
     window.location.href = "./game";
 });
-
-updateModeUI();
+}

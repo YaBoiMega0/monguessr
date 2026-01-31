@@ -64,7 +64,7 @@ body{
 .mainBtn {
     border-radius: 999px;
     border: none;
-    padding: 1vh 2vw;
+    padding: max(1vh, 12px) max(2vw, 24px);
     min-width:max-content;
     cursor: pointer;
     align-items: center;
@@ -86,21 +86,21 @@ body{
 }
 
 h1{
-    font-size: 4vw;
+    font-size: min(6em, 9vw, 9vh);
     font-weight: bold;
     color: var(--text);
     text-shadow: 4px 4px 0px var(--highlight2);
 }
 
 h2{
-    font-size: 3vw;
+    font-size: min(4.5em, 6vw, 6vh);
     font-weight: bold;
     color: var(--text);
     text-shadow: 4px 4px 0px var(--highlight1);
 }
 
 p{
-    font-size: 1.8vw;
+    font-size: min(2.4em, 3.6vw, 3.6vh);
     padding-inline: 5vw;
     color: var(--text);
     text-shadow: 4px 4px 0px var(--highlight1);
@@ -130,7 +130,7 @@ p{
 
 #disclaimer{
     color: var(--muted);
-    font-size: 0.8vw;
+    font-size: min(1.2em, 1.8vw, 1.8vh);
     max-width: 50%;
     padding: 1vw;
 }

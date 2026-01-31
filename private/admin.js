@@ -15,6 +15,7 @@ var tagChips;
 var sendBtn;
 var imgInput;
 var coordsText;
+var previewImg;
 var bottomBoundary = -37.916;
 var topBoundary = -37.905;
 var leftBoundary = 145.127;
@@ -30,6 +31,7 @@ function setupUI() {
   sendBtn = document.getElementById("sendBtn");
   imgInput = document.getElementById("photoInput");
   coordsText = document.getElementById("coordsText");
+  previewImg = document.getElementById("previewImg");
   const mapElement = document.getElementById("map");
   const bounds = L.latLngBounds(L.latLng(bottomBoundary, leftBoundary), L.latLng(topBoundary, rightBoundary));
   mapInstance = L.map(mapElement, {
@@ -94,6 +96,7 @@ async function preprocessImage(imageFile) {
       const sx = (img.width - drawW) / 2;
       const sy = (img.height - drawH) / 2;
       ctx.drawImage(img, sx, sy, drawW, drawH, 0, 0, targetW, targetH);
+      previewImg.src = canvas.toDataURL();
       canvas.toBlob((blob) => blob ? resolve(blob) : reject(`Critical Error:
 AVIF Encoding Failed.`), "image/avif", 0.9);
     };

@@ -18,7 +18,7 @@ let currentGuessMarker: L.Marker | null = null;
 let currentErrorPopup: L.Popup | null = null;
 let pImg: Blob | null = null;
 let difficultyChips: NodeListOf<HTMLButtonElement>, tagsList: HTMLElement, tagChips: NodeListOf<HTMLButtonElement>,
-sendBtn: HTMLButtonElement, imgInput: HTMLInputElement, coordsText: HTMLElement
+sendBtn: HTMLButtonElement, imgInput: HTMLInputElement, coordsText: HTMLElement, previewImg: HTMLImageElement;
 
 const bottomBoundary = -37.916
 const topBoundary = -37.905
@@ -37,6 +37,7 @@ function setupUI() {
     sendBtn = document.getElementById("sendBtn")! as HTMLButtonElement;
     imgInput = document.getElementById("photoInput")! as HTMLInputElement;
     coordsText = document.getElementById("coordsText")! as HTMLElement;
+    previewImg = document.getElementById("previewImg")! as HTMLImageElement;
     
     const mapElement = document.getElementById('map') as HTMLElement;
     const bounds = L.latLngBounds(L.latLng(bottomBoundary, leftBoundary), L.latLng(topBoundary, rightBoundary));
@@ -125,6 +126,7 @@ async function preprocessImage(imageFile: File): Promise<Blob> {
         const sy = (img.height - drawH) / 2;
         ctx.drawImage(img, sx, sy, drawW, drawH, 0, 0, targetW, targetH);
         
+        previewImg.src = canvas.toDataURL();
         // Encode AVIF
         canvas.toBlob(
             (blob) => blob ? resolve(blob) : reject('Critical Error:\nAVIF Encoding Failed.'),
