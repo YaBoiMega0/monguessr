@@ -4,7 +4,7 @@ import { get_time } from './utils.ts';
 
 const ENDLESS_START_HP = Number.parseInt(Bun.env.ENDLESS_START_HP || '5000')
 const LOG_LVL = Number.parseInt(Bun.env.LOG_LVL || '1')
-const ALLOWED_TAGS: Tag[] = ['indoor', 'outdoor', 'carpark'];
+const ALLOWED_TAGS: Tag[] = ['indoor', 'outdoor', 'carpark', 'best', 'worst'];
 let dbpool: SQL | null = null;
 
 async function getDB(): Promise<SQL> {

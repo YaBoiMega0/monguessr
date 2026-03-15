@@ -6,7 +6,9 @@ CREATE TABLE locations (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   is_indoor BOOLEAN DEFAULT 0,
   is_outdoor BOOLEAN DEFAULT 0,
-  is_carpark BOOLEAN DEFAULT 0
+  is_carpark BOOLEAN DEFAULT 0,
+  is_best BOOLEAN DEFAULT 0,
+  is_worst BOOLEAN DEFAULT 0
 );
 
 CREATE TABLE sessions (

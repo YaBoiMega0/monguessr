@@ -29,7 +29,7 @@ export type LocInfo = {
 
 export type Difficulty = "easy" | "medium" | "hard" | "impossible";
 type GameMode = "standard" | "endless";
-export type Tag = "all" | "indoor" | "outdoor" | "carpark";
+export type Tag = "all" | "indoor" | "outdoor" | "carpark" | "best" | "worst";
 
 export type StandardParams = {
     gamemode: GameMode;
