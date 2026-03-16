@@ -1,4 +1,5 @@
 import { type Params } from './types/types'
+import sharp from 'sharp';
 
 export function get_time(): string { return `[${new Date().toLocaleTimeString()}]` }
 
@@ -31,4 +32,15 @@ export function coordsToLatLong(x: number, y: number): [number, number] {
     const long: number = (x / 125000000) + 145.127;
     const lat: number = (y / 125000000) - 37.916;
     return [lat, long]
+}
+
+export async function preprocessImage(img: Blob): Promise<Buffer> {
+    const inputBuffer = await img.arrayBuffer();
+    return await sharp(Buffer.from(inputBuffer))
+        .resize(1920, 1080, {
+            fit: 'cover',
+            position: 'centre'
+        })
+        .avif({ quality: 80 })
+        .toBuffer();
 }

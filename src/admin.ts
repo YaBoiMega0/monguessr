@@ -93,7 +93,7 @@ function getConfig() {
     };
 }
 
-async function preprocessImage(imageFile: File): Promise<Blob> {
+async function showPreview(imageFile: File): Promise<void> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
@@ -127,12 +127,7 @@ async function preprocessImage(imageFile: File): Promise<Blob> {
         ctx.drawImage(img, sx, sy, drawW, drawH, 0, 0, targetW, targetH);
         
         previewImg.src = canvas.toDataURL();
-        // Encode AVIF
-        canvas.toBlob(
-            (blob) => blob ? resolve(blob) : reject('Critical Error:\nAVIF Encoding Failed.'),
-            'image/avif',
-            0.9  // Quality
-        );
+        resolve();
     };
     img.onerror = reject;
     img.src = URL.createObjectURL(imageFile);
@@ -216,7 +211,8 @@ function bindEvents() {
 
     imgInput.onchange = async () => {
         if (imgInput.files?.[0]) {
-            pImg = await preprocessImage(imgInput.files[0]);
+            pImg = imgInput.files[0];
+            await showPreview(imgInput.files[0]);
         }
     };
 }

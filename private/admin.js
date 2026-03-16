@@ -71,7 +71,7 @@ function getConfig() {
     ypos: guessPos[1]
   };
 }
-async function preprocessImage(imageFile) {
+async function showPreview(imageFile) {
   return new Promise((resolve, reject) => {
     const img = new Image;
     img.onload = () => {
@@ -97,8 +97,7 @@ async function preprocessImage(imageFile) {
       const sy = (img.height - drawH) / 2;
       ctx.drawImage(img, sx, sy, drawW, drawH, 0, 0, targetW, targetH);
       previewImg.src = canvas.toDataURL();
-      canvas.toBlob((blob) => blob ? resolve(blob) : reject(`Critical Error:
-AVIF Encoding Failed.`), "image/avif", 0.9);
+      resolve();
     };
     img.onerror = reject;
     img.src = URL.createObjectURL(imageFile);
@@ -166,7 +165,8 @@ function bindEvents() {
   });
   imgInput.onchange = async () => {
     if (imgInput.files?.[0]) {
-      pImg = await preprocessImage(imgInput.files[0]);
+      pImg = imgInput.files[0];
+      await showPreview(imgInput.files[0]);
     }
   };
 }

@@ -195,7 +195,7 @@ export async function getPicture(sessionid: number): Promise<Blob> {
     return file
 }
 
-export async function addLocation(locinfo: LocInfo, img: Blob): Promise<boolean> {
+export async function addLocation(locinfo: LocInfo, img: Buffer): Promise<boolean> {
     // Enforce parameter existence and correct formatting.
     if (!locinfo.difficulty || !locinfo.xpos || !locinfo.ypos) return false;
     const dif = locinfo.difficulty.slice(0,1).toUpperCase();
@@ -226,8 +226,7 @@ export async function addLocation(locinfo: LocInfo, img: Blob): Promise<boolean>
     };
 
     // Write image data to file
-    const imgBytes = new Uint8Array(await img.arrayBuffer());
-    await Bun.write(`./images/${lid}.avif`, imgBytes)
+    await Bun.write(`./images/${lid}.avif`, img)
 
     return Bun.file(`./images/${lid}.avif`).exists()
 }

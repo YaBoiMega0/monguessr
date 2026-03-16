@@ -1,6 +1,6 @@
 import { serve } from 'bun';
 import { type Params, type LocGuess, type GameState, type LocResponse, type LocInfo } from './types/types'
-import { get_time, calcDist, calcScore, generateSessionID } from './utils.ts'
+import { get_time, calcDist, calcScore, generateSessionID, preprocessImage } from './utils.ts'
 import { newSession, getGameState, validateSession, killSession, getPicture, advanceGameState, addLocation, garbageCollectSessions } from './db_interface.ts';
 
 const port = Bun.env.PORT || 8000;
@@ -99,7 +99,9 @@ async function process_api(path: string, req: Request): Promise<Response | null>
     if (path === `/${ADMIN_PW}/api/uploadpicture`) {
         const fd = await req.formData() as FormData;
         const locinfo = JSON.parse(fd.get('settings') as string) as LocInfo;
-        const newImg = fd.get('image') as Blob;
+        // Convert the image to AVIF for efficient storage
+        const newImg = await preprocessImage(fd.get('image') as Blob);
+
         const success: boolean = await addLocation(locinfo, newImg);
                 if (LOG_LVL >= 3) console.log(`${get_time()} New picture uploaded. Success = ${success}`);
         if (success) return new Response("Success", { status: 200 });
