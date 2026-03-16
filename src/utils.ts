@@ -12,7 +12,7 @@ export function calcDist(pos1: [number, number], pos2: [number, number]): number
 export function calcScore(dist: number): number {
     if (dist < 10000) return 5000;
 
-    return Math.floor(5000 * Math.exp(-10*((dist-10000)/5000000)))
+    return Math.floor(5000 * Math.exp(-10*((dist-10000)/2500000)))
 }
 
 export function generateSessionID(params: Params): number {
