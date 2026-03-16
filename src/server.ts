@@ -3,6 +3,7 @@ import { type Params, type LocGuess, type GameState, type LocResponse, type LocI
 import { get_time, calcDist, calcScore, generateSessionID, preprocessImage } from './utils.ts'
 import { newSession, getGameState, validateSession, killSession, getPicture, advanceGameState, addLocation, garbageCollectSessions } from './db_interface.ts';
 
+const hostname = Bun.env.HOST || 'localhost';
 const port = Bun.env.PORT || 8000;
 const ADMIN_PW: string = Bun.env.PASS || 'admin';
 const LOG_LVL = Number.parseInt(Bun.env.LOG_LVL || '1')
@@ -127,4 +128,4 @@ setInterval(async () => {
     await garbageCollectSessions(60); // Delete all inactive for longer than 60 minutes
 }, 1000 * 3600);
 
-console.log(`${get_time()} MonGuessr LIVE on http://localhost:${port}`);
+console.log(`${get_time()} MonGuessr LIVE on http://${hostname}:${port}`);
