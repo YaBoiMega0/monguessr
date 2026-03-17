@@ -74,7 +74,7 @@ async function process_api(path: string, req: Request): Promise<Response | null>
         const res: LocResponse = {
             xpos: (gameState.difficulty !== 'impossible') ? gameState.correctx : null,
             ypos: (gameState.difficulty !== 'impossible') ? gameState.correcty : null,
-            distance: Math.ceil(dist/1000),
+            distance: Math.floor(dist/1000),
             score: score,
             curr_round: curr_round
         }

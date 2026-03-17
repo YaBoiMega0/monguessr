@@ -10,9 +10,10 @@ export function calcDist(pos1: [number, number], pos2: [number, number]): number
 }
 
 export function calcScore(dist: number): number {
-    if (dist < 10000) return 5000;
+    // Perfect score at 10m distance or less, display rounds 10.999 down
+    if (dist < 11000) return 5000;
 
-    return Math.floor(5000 * Math.exp(-10*((dist-10000)/2500000)))
+    return Math.floor(5000 * Math.exp(-10*((dist-10999)/2500000)))
 }
 
 export function generateSessionID(params: Params): number {
