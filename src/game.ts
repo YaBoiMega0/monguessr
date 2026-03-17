@@ -113,7 +113,7 @@ function setupUI() {
 
 function animateCounter(element: HTMLElement, before: number, after: number, prefix: string = '', suffix: string = '') {
     let wait: boolean = false;
-    element.textContent = before.toString();
+    element.textContent = prefix + before.toString() + suffix
     
     function tick() {
         if (wait) {
