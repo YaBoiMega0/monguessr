@@ -98,6 +98,7 @@ function setupUI() {
 }
 function animateCounter(element, before, after, prefix = "", suffix = "") {
   let wait = false;
+  element.textContent = before.toString();
   function tick() {
     if (wait) {
       wait = false;
