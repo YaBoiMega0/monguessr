@@ -104,9 +104,7 @@ function setupUI() {
     resultScoreLabel.textContent = (gameState.gamemode === 'endless' ? 'health lost' : 'points scored')
     updateRound();
     updateScore(true);
-    if (Number.parseInt(gameState.timerSeconds) !== 0) {
-        stopTimer = startCountdown();
-    } else {
+    if (Number.parseInt(gameState.timerSeconds) === 0) {
         timerElement.hidden = true;
     }
 }
@@ -208,6 +206,14 @@ async function loadNextPicture() {
     
     const imgBlob: Blob = await response.blob();
     currentImage = URL.createObjectURL(imgBlob);
+
+    // Start timer only after image fully loads
+    if (Number.parseInt(gameState.timerSeconds) !== 0) {
+        imageElement.addEventListener('load', () => {
+            stopTimer = startCountdown();
+        }, { once: true });
+    }
+
     imageElement.src = currentImage;
 
     guessed = false;
@@ -299,7 +305,6 @@ async function nextRound() {
     nextBtn.style.display = 'none';
     saveProgress();
     await loadNextPicture();
-    if (Number.parseInt(gameState.timerSeconds) !== 0) stopTimer = startCountdown();
 }
 
 function updateRound() {
@@ -322,11 +327,6 @@ function updateScore(instant: boolean = false) {
 }
 
 function endGame() {
-    fetch(`./api/killsession`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sessionid })
-        });
     sessionStorage.clear()
     alert(`Game Over! Final Score: ${gameState.gamemode === 'endless' ? gameState.curr_round : gameState.score}`);
     window.location.href = "./";

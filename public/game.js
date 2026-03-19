@@ -90,9 +90,7 @@ function setupUI() {
   resultScoreLabel.textContent = gameState.gamemode === "endless" ? "health lost" : "points scored";
   updateRound();
   updateScore(true);
-  if (Number.parseInt(gameState.timerSeconds) !== 0) {
-    stopTimer = startCountdown();
-  } else {
+  if (Number.parseInt(gameState.timerSeconds) === 0) {
     timerElement.hidden = true;
   }
 }
@@ -171,6 +169,11 @@ Failed to load picture. Please start a new session and try again.`);
   }
   const imgBlob = await response.blob();
   currentImage = URL.createObjectURL(imgBlob);
+  if (Number.parseInt(gameState.timerSeconds) !== 0) {
+    imageElement.addEventListener("load", () => {
+      stopTimer = startCountdown();
+    }, { once: true });
+  }
   imageElement.src = currentImage;
   guessed = false;
   nextBtn.style.display = "none";
@@ -246,8 +249,6 @@ async function nextRound() {
   nextBtn.style.display = "none";
   saveProgress();
   await loadNextPicture();
-  if (Number.parseInt(gameState.timerSeconds) !== 0)
-    stopTimer = startCountdown();
 }
 function updateRound() {
   if (gameState.gamemode === "standard") {
@@ -266,11 +267,6 @@ function updateScore(instant = false) {
   animateCounter(scoreElement, Number.parseInt(scoreElement.textContent.slice(7)), Math.max(0, gameState.score), gameState.gamemode === "standard" ? "Points: " : "Health: ");
 }
 function endGame() {
-  fetch(`./api/killsession`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sessionid })
-  });
   sessionStorage.clear();
   alert(`Game Over! Final Score: ${gameState.gamemode === "endless" ? gameState.curr_round : gameState.score}`);
   window.location.href = "./";
