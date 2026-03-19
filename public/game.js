@@ -96,7 +96,7 @@ function setupUI() {
 }
 function animateCounter(element, before, after, prefix = "", suffix = "") {
   let wait = false;
-  element.textContent = before.toString();
+  element.textContent = prefix + before.toString() + suffix;
   function tick() {
     if (wait) {
       wait = false;
@@ -196,6 +196,12 @@ async function submitGuess() {
   if (stopTimer)
     stopTimer();
   const guess = { sessionid, xpos, ypos };
+  submitBtn.style.display = "none";
+  submitBtn.disabled = true;
+  nextBtn.style.display = "block";
+  resultPopup.style.display = "flex";
+  mapContainer.classList.add("submitted");
+  guessed = true;
   const response = await fetch(`./api/submitguess`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -229,13 +235,7 @@ Guess submission failed. Please start a new session and try again.`);
   } else
     console.log("Location hidden due to difficulty");
   mapInstance.setView([-37.91, 145.13], 15);
-  submitBtn.style.display = "none";
-  submitBtn.disabled = true;
-  nextBtn.style.display = "block";
-  resultPopup.style.display = "flex";
-  mapContainer.classList.add("submitted");
   guessPos = null;
-  guessed = true;
   saveProgress();
 }
 async function nextRound() {

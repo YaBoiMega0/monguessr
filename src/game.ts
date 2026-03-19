@@ -242,6 +242,13 @@ async function submitGuess() {
 
     const guess: LocGuess = { sessionid, xpos, ypos }
 
+    submitBtn.style.display = 'none';
+    submitBtn.disabled = true;
+    nextBtn.style.display = 'block';
+    resultPopup.style.display = 'flex';
+    mapContainer.classList.add('submitted');
+    guessed = true;
+
     const response = await fetch(`./api/submitguess`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -283,13 +290,8 @@ async function submitGuess() {
     } else console.log("Location hidden due to difficulty")
     mapInstance.setView([-37.91, 145.13], 15);
 
-    submitBtn.style.display = 'none';
-    submitBtn.disabled = true;
-    nextBtn.style.display = 'block';
-    resultPopup.style.display = 'flex';
-    mapContainer.classList.add('submitted');
     guessPos = null;
-    guessed = true;
+    
     saveProgress();
 }
 
